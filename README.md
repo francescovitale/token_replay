@@ -9,7 +9,7 @@ To work, the algorithm requires three inputs:
 
 - Events stored in the database - in the "event" table - for the application of the technique
 
-A sample Petri net description ( and a MySQL database dump, which ships with a collection of events, are provided.
+A sample Petri net description, and a MySQL database dump, which ships with a collection of events, are provided.
 The main method of the Checker class allows executing the algorithm. 
 Diagnostics (the output of the algorithm) are written to "Diagnostics/cf_diagnostics.txt" file. Diagnostics provide:
 
