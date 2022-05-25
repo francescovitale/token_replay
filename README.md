@@ -15,8 +15,6 @@ Diagnostics (the output of the algorithm) are written to the two "Diagnostics/cf
 
 - The fitness of the replayed event log
 
-- The activities that highlighted anomalies throughout the event log replay
-
 "perf_diagnostics.txt" provide:
 
 - Trace-level timing statistics of the replayed event log
