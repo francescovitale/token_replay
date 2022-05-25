@@ -1,29 +1,17 @@
-# TokenReplayExtended
-This is a Java implementation of the conformance checking algorithm "Token Replay", extended to work with basic lifecycle stages linked to events.
+# Python toolchain for automated token replay-based conformance checking with timing analysis
 
-To work, the algorithm requires three inputs:
+This repository groups python scripts for:
 
-- The Petri net description of the reference process (each description is made of a collection of files, each of which are to be placed in a dedicated directory, whose name will be the one the process will be recognized with by the algorithm, under the path "PetriNets/")
+- The translation of a BPMN model (specified using a group of files for capturing all dependencies among activities) to a trace-equivalent Petri net 
+- The translation of BPMN traces to the corresponding trace-equivalent Petri net
+- Recording the extended traces to a MySQL database
+- Apply the token replay technique (based on the open-source implementation TokenReplayExtended contained within this repository)
 
-- A MySQL database with a schema named "eventlog_rtis", whose data model must be compliant with the one engineered for the algorithm to work (made of the tables "process", "activity", "process_instance", "activity_instance", "event", refer to the database dump contained under the path "dbdumps/" for more information)
+The generation of a trace-equivalent Petri net to a BPMN model is done through the "petri_net_builder.py" script, which works with the "Input" and "Output" directories contained in this branch. Please note the generated Petri net will be put into the "Output/PetriNets" directory. This sub-directory must be put into the "PetriNets" folder for correct traces handling (i.e., the next step this toolchain handles). Please, also note that this script connects to the MySQL database for recording the process name and all of the related activities (BPMN and non-BPMN).
+Translation of BPMN traces, recording of the extended traces to a MySQL database, and application of the token replay technique is done through the "traces_handler_extended.py" script, which also works with the "Input" and "Output" directories contained in this branch, and requires an input argument, which is the name of the network (for this release, use "start_of_mission_carmine"). Please note this script will run two jar executables, namely LogExtractor.jar and TokenReplayExtended.jar. This last executable requires the two "Diagnostics" and "PetriNets" contained in this branch. Please, also note that BPMN traces are collected 
+from the MySQL database itself (whose schema name is "eventlog_rtis",) which is supposed to have recorded BPMN traces until this script is run.
 
-- Events stored in the database - in the "event" table - for the application of the technique
-
-A sample Petri net description, and a MySQL database dump, which ships with a collection of events, are provided.
-The main method of the Checker class allows executing the algorithm. 
-Diagnostics (the output of the algorithm) are written to the two "Diagnostics/cf_diagnostics.txt" and "Diagnostics/perf_diagnostics.txt" files. "cf_diagnostics.txt" provide:
-
-- The fitness of the replayed event log
-
-"perf_diagnostics.txt" provide:
-
-- Trace-level timing statistics of the replayed event log
-  - ACET (Average-Case Execution Time)
-  - BCET (Best-Case Execution Time)
-  - WCET (Worst-Case Execution Time)
-- Transition-level timing statistics of the replayed event log
-  - ACET
-  - BCET
-  - WCET
+The BPMN model is contained within the "Input/BPMN" directory. Please, refer to the existing files for correct BPMN model specification.
+The extended traces will be recorded within the "Output/ModifiedTraces" directory.
 
 
