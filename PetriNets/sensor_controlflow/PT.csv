@@ -1,0 +1,10 @@
+;check_pendulum_channel;store_channel_state;halt_sensor_execution;retrieve_state_data;start_preprocessing;denoise_data;check_bounds;send_pendulum_state
+NCD;0;0;1;1;0;0;0;0
+NVC;1;0;0;1;0;0;0;0
+HO;0;0;0;0;0;0;0;0
+VC;0;1;1;0;0;0;0;0
+CD;0;0;0;0;1;0;0;0
+NPD;1;0;1;0;1;0;0;0
+DND;0;0;0;0;0;1;0;0
+CB;0;0;0;0;0;0;1;0
+SNS;0;0;0;0;0;0;0;1

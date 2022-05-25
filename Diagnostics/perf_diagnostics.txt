@@ -1,0 +1,231 @@
+Trace ACET: 1230335963,3333300
+Trace BCET: 797394700,0000000
+Trace WCET: 4999612300,0000000
+Statistics for transition: S0
+Transition ACET: 111673676,6666670
+Transition BCET: 104236500,0000000
+Transition WCET: 149572700,0000000
+Statistics for transition: S23
+Transition ACET: 108317826,6666670
+Transition BCET: 101540400,0000000
+Transition WCET: 114451400,0000000
+Statistics for transition: S1
+Transition ACET: 277381716,6666670
+Transition BCET: 100517100,0000000
+Transition WCET: 1604982400,0000000
+Statistics for transition: S2
+Transition ACET: 279446238,0952380
+Transition BCET: 102113000,0000000
+Transition WCET: 1607874400,0000000
+Statistics for transition: S3
+Transition ACET: 332200716,6666670
+Transition BCET: 107125400,0000000
+Transition WCET: 1235678200,0000000
+Statistics for transition: S4
+Transition ACET: 4941880,0000000
+Transition BCET: 1279700,0000000
+Transition WCET: 7957800,0000000
+Statistics for transition: S5
+Transition ACET: 4781360,0000000
+Transition BCET: 1489700,0000000
+Transition WCET: 7943900,0000000
+Statistics for transition: S6
+Transition ACET: 4940108,3333330
+Transition BCET: 1267100,0000000
+Transition WCET: 8409900,0000000
+Statistics for transition: S7
+Transition ACET: 4763250,0000000
+Transition BCET: 1993100,0000000
+Transition WCET: 7907700,0000000
+Statistics for transition: S8
+Transition ACET: 5707000,0000000
+Transition BCET: 1446900,0000000
+Transition WCET: 9261900,0000000
+Statistics for transition: S9
+Transition ACET: 4849516,6666670
+Transition BCET: 2247200,0000000
+Transition WCET: 7113700,0000000
+Statistics for transition: S10
+Transition ACET: 5166216,6666670
+Transition BCET: 3758100,0000000
+Transition WCET: 7712500,0000000
+Statistics for transition: S11
+Transition ACET: 0,0000000
+Transition BCET: 9223372036854,7750000
+Transition WCET: -9223372036854,7750000
+Statistics for transition: S12
+Transition ACET: 106278850,0000000
+Transition BCET: 100412500,0000000
+Transition WCET: 115255400,0000000
+Statistics for transition: S13
+Transition ACET: 107714673,3333330
+Transition BCET: 100869200,0000000
+Transition WCET: 114311900,0000000
+Statistics for transition: S14
+Transition ACET: 108866816,6666670
+Transition BCET: 100352400,0000000
+Transition WCET: 114316700,0000000
+Statistics for transition: S15
+Transition ACET: 110069111,1111110
+Transition BCET: 104619600,0000000
+Transition WCET: 115377200,0000000
+Statistics for transition: S16
+Transition ACET: 4259416,6666670
+Transition BCET: 1292600,0000000
+Transition WCET: 7008000,0000000
+Statistics for transition: S17
+Transition ACET: 3852933,3333330
+Transition BCET: 1168400,0000000
+Transition WCET: 5698500,0000000
+Statistics for transition: S18
+Transition ACET: 3342580,0000000
+Transition BCET: 2582500,0000000
+Transition WCET: 4919700,0000000
+Statistics for transition: S19
+Transition ACET: 4628800,0000000
+Transition BCET: 1454900,0000000
+Transition WCET: 5926100,0000000
+Statistics for transition: S20
+Transition ACET: 5298316,6666670
+Transition BCET: 2143800,0000000
+Transition WCET: 7947800,0000000
+Statistics for transition: S21
+Transition ACET: 4213675,0000000
+Transition BCET: 1642800,0000000
+Transition WCET: 6280100,0000000
+Statistics for transition: S22
+Transition ACET: 104678811,1111110
+Transition BCET: 100397100,0000000
+Transition WCET: 112781000,0000000
+Statistics for transition: XOR_S2_S3
+Transition ACET: 218135833,4270830
+Transition BCET: 0,0937500
+Transition WCET: 1121996000,0937500
+Statistics for transition: XOR_S2_S4
+Transition ACET: 0,0937500
+Transition BCET: 0,0937500
+Transition WCET: 0,0937500
+Statistics for transition: XOR_S5_S6
+Transition ACET: 0,0937500
+Transition BCET: 0,0937500
+Transition WCET: 0,0937500
+Statistics for transition: XOR_S5_S12
+Transition ACET: 0,0937500
+Transition BCET: 0,0937500
+Transition WCET: 0,0937500
+Statistics for transition: XOR_S7_S8
+Transition ACET: 0,0937500
+Transition BCET: 0,0937500
+Transition WCET: 0,0937500
+Statistics for transition: XOR_S7_S11
+Transition ACET: 0,0000000
+Transition BCET: 9223372036854,7750000
+Transition WCET: -9223372036854,7750000
+Statistics for transition: XOR_S8_S9
+Transition ACET: 0,0937500
+Transition BCET: 0,0937500
+Transition WCET: 0,0937500
+Statistics for transition: XOR_S8_S10
+Transition ACET: 0,0937500
+Transition BCET: 0,0937500
+Transition WCET: 0,0937500
+Statistics for transition: XOR_S13_S14
+Transition ACET: 0,0937500
+Transition BCET: 0,0937500
+Transition WCET: 0,0937500
+Statistics for transition: XOR_S13_S15
+Transition ACET: 0,0937500
+Transition BCET: 0,0937500
+Transition WCET: 0,0937500
+Statistics for transition: XOR_S15_S16
+Transition ACET: 0,0937500
+Transition BCET: 0,0937500
+Transition WCET: 0,0937500
+Statistics for transition: XOR_S15_S17
+Transition ACET: 0,0937500
+Transition BCET: 0,0937500
+Transition WCET: 0,0937500
+Statistics for transition: XOR_S15_S18
+Transition ACET: 0,0937500
+Transition BCET: 0,0937500
+Transition WCET: 0,0937500
+Statistics for transition: XOR_S15_S19
+Transition ACET: 0,0000000
+Transition BCET: 9223372036854,7750000
+Transition WCET: -9223372036854,7750000
+Statistics for transition: XOR_S15_S20
+Transition ACET: 0,0000000
+Transition BCET: 9223372036854,7750000
+Transition WCET: -9223372036854,7750000
+Statistics for transition: XOR_S15_S21
+Transition ACET: 0,0937500
+Transition BCET: 0,0937500
+Transition WCET: 0,0937500
+Statistics for transition: XOR_S16_S17
+Transition ACET: 0,0000000
+Transition BCET: 9223372036854,7750000
+Transition WCET: -9223372036854,7750000
+Statistics for transition: XOR_S16_S18
+Transition ACET: 0,0000000
+Transition BCET: 9223372036854,7750000
+Transition WCET: -9223372036854,7750000
+Statistics for transition: XOR_S16_S19
+Transition ACET: 0,0000000
+Transition BCET: 9223372036854,7750000
+Transition WCET: -9223372036854,7750000
+Statistics for transition: XOR_S16_S20
+Transition ACET: 0,0937500
+Transition BCET: 0,0937500
+Transition WCET: 0,0937500
+Statistics for transition: XOR_S16_S21
+Transition ACET: 0,0000000
+Transition BCET: 9223372036854,7750000
+Transition WCET: -9223372036854,7750000
+Statistics for transition: XOR_S3_S1
+Transition ACET: 219070725,0937500
+Transition BCET: 0,0937500
+Transition WCET: 1120761700,0937500
+Statistics for transition: XOR_S0_S1
+Transition ACET: 0,0937500
+Transition BCET: 0,0937500
+Transition WCET: 0,0937500
+Statistics for transition: XOR_S9_S13
+Transition ACET: 0,0937500
+Transition BCET: 0,0937500
+Transition WCET: 0,0937500
+Statistics for transition: XOR_S10_S13
+Transition ACET: 0,0937500
+Transition BCET: 0,0937500
+Transition WCET: 0,0937500
+Statistics for transition: XOR_S11_S13
+Transition ACET: 0,0000000
+Transition BCET: 9223372036854,7750000
+Transition WCET: -9223372036854,7750000
+Statistics for transition: XOR_S12_S13
+Transition ACET: 0,0937500
+Transition BCET: 0,0937500
+Transition WCET: 0,0937500
+Statistics for transition: XOR_S17_S22
+Transition ACET: 0,0937500
+Transition BCET: 0,0937500
+Transition WCET: 0,0937500
+Statistics for transition: XOR_S18_S22
+Transition ACET: 0,0937500
+Transition BCET: 0,0937500
+Transition WCET: 0,0937500
+Statistics for transition: XOR_S19_S22
+Transition ACET: 0,0937500
+Transition BCET: 0,0937500
+Transition WCET: 0,0937500
+Statistics for transition: XOR_S21_S22
+Transition ACET: 0,0937500
+Transition BCET: 0,0937500
+Transition WCET: 0,0937500
+Statistics for transition: XOR_S14_S23
+Transition ACET: 0,0937500
+Transition BCET: 0,0937500
+Transition WCET: 0,0937500
+Statistics for transition: XOR_S22_S23
+Transition ACET: 0,0937500
+Transition BCET: 0,0937500
+Transition WCET: 0,0937500
