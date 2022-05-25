@@ -11,11 +11,11 @@ To work, the algorithm requires three inputs:
 
 A sample Petri net description, and a MySQL database dump, which ships with a collection of events, are provided.
 The main method of the Checker class allows executing the algorithm. 
-Diagnostics (the output of the algorithm) are written to the two "Diagnostics/cf_diagnostics.txt" and "Diagnostics/perf_diagnostics.txt" files. "cf_diagnostics.txt" provide:
+Diagnostics (the output of the algorithm) are written to the two "Diagnostics/cf_diagnostics.txt" and "Diagnostics/perf_diagnostics.txt" files. "cf_diagnostics.txt" provides:
 
 - The fitness of the replayed event log
 
-"perf_diagnostics.txt" provide:
+"perf_diagnostics.txt" provides:
 
 - Trace-level timing statistics of the replayed event log
   - ACET (Average-Case Execution Time)
