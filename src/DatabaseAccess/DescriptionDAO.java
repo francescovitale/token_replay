@@ -15,7 +15,7 @@ public class DescriptionDAO {
 		
 		ArrayList<Description> DList = new ArrayList<Description>();
 		Statement stmt = Conn.createStatement();
-		String query = "SELECT * FROM eventlog.description";
+		String query = "SELECT * FROM eventlog_ad_dt.description";
 		ResultSet rs = stmt.executeQuery(query);
 		
 		while(rs.next()) {
@@ -30,14 +30,8 @@ public class DescriptionDAO {
 	
 	public static void insertDescription(Connection Conn, float Fitness) throws SQLException{
 		Statement stmt = Conn.createStatement();
-		String query = "INSERT INTO eventlog.description (Fitness) VALUES ('"+Fitness+"')";
+		String query = "INSERT INTO eventlog_ad_dt.description (Fitness) VALUES ('"+Fitness+"')";
 		stmt.executeUpdate(query);
 		
-	}
-	
-	public static void deleteDescriptions(Connection Conn) throws SQLException{
-		Statement stmt = Conn.createStatement();
-		String query = "DELETE FROM eventlog.description";
-		stmt.executeUpdate(query);
 	}
 }

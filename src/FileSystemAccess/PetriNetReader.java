@@ -29,14 +29,23 @@ public
 		ArrayList<Activity> Transitions = getTransitions(PNDataDirectory + "\\transitions", A);
 		BiHashMap<String,String,Boolean> TP = getTP(PNDataDirectory + "\\TP.csv");
 		BiHashMap<String,String,Boolean> PT = getPT(PNDataDirectory + "\\PT.csv");
-		HashMap<String,Integer> DefaultMarking = getDefaultMarking(PNDataDirectory + "\\default_marking", Places);
-		String FinalTransition = getFinalTransition(PNDataDirectory + "\\final_transition");
+		HashMap<String,Integer> M = getMarking(PM);
+		String LT = getLastTransition(PNDataDirectory + "\\final_transition");
 		
-		PN = new PetriNet(PM,Places,Transitions,PT,TP,DefaultMarking,FinalTransition);
+		PN = new PetriNet(PM,Places,Transitions,PT,TP,M, LT);
 		
 		return PN;
 	}
 	
+	private String getLastTransition(String LastTransitionFilePath) throws FileNotFoundException {
+		File LastTransitionFile = new File(LastTransitionFilePath);
+		Scanner Reader = new Scanner(LastTransitionFile);
+		String LastTransition = Reader.nextLine();
+		
+		Reader.close();
+		return LastTransition;
+	}
+
 	ArrayList<String> getPlaces(String PlacesFilePath) throws FileNotFoundException{
 		ArrayList<String> Places = new ArrayList<String>();
 		File PlacesFile = new File(PlacesFilePath);
@@ -132,45 +141,24 @@ public
 		}
 		for(int i = 0; i<FetchedPlaces.length; i++) {
 			for(int j=0; j<FetchedTransitions.length; j++) {
-				//System.out.print("Fetched Place: " + FetchedPlaces[i] + " Fetched Transition: " + FetchedTransitions[j] + 
-				//		" Fetched Arc: " + FetchedArcs[i][j]);
 				PT.put(FetchedPlaces[i], FetchedTransitions[j], FetchedArcs[i][j]);
 			}
 		}
 		return PT;
 	};
 	
-	HashMap<String,Integer> getDefaultMarking(String DefaultMarkingFilePath, ArrayList<String> Places) throws IOException{
-		HashMap<String, Integer> Marking = new HashMap<String, Integer>();
-		
-		for(int i=0;i<Places.size();i++)
-			Marking.put(Places.get(i),0);
-		
-		try (BufferedReader br = new BufferedReader(new FileReader(DefaultMarkingFilePath))) {
-		    String ReadPlace;
-		    while ((ReadPlace = br.readLine()) != null) {
-		    	String[] Tokens = ReadPlace.split(":");
-		    	if(Tokens[1].equals("1")) {
-		        	Marking.put(Tokens[0], 1);
-		    	}
-		    }
+	HashMap<String,Integer> getMarking(ProcessModel PM) throws FileNotFoundException{
+		String PNDataDirectory = PetriNetsDirectory + "\\" + PM.getName();
+		ArrayList<String> Places = new ArrayList<String>(getPlaces(PNDataDirectory + "\\places"));
+		HashMap<String,Integer> M = new HashMap<String,Integer>();
+		for(int i=0; i<Places.size(); i++) {
+			if(i == 0)
+				M.put(Places.get(i), 1);
+			else
+				M.put(Places.get(i), 0);
 		}
+		return M;
 		
-		return Marking;
-		
-	}
-	
-	String getFinalTransition(String FinalTransitionFilePath) throws FileNotFoundException, IOException {
-		String FinalTransition = null;
-		
-		try (BufferedReader br = new BufferedReader(new FileReader(FinalTransitionFilePath))) {
-		    String ReadFinalTransition;
-		    while ((ReadFinalTransition = br.readLine()) != null) {
-		       FinalTransition = ReadFinalTransition;
-		    }
-		}
-		
-		return FinalTransition;
 	}
 	
 }

@@ -12,7 +12,7 @@ public class ProcessDAO {
 	static public ArrayList<ProcessModel> getProcessList(Connection Conn) throws SQLException{
 		ArrayList<ProcessModel> PMList = new ArrayList<ProcessModel>();
 		Statement stmt = Conn.createStatement();
-		String query = "SELECT * FROM eventlog.process";
+		String query = "SELECT * FROM eventlog_ad_dt.process";
 		ResultSet rs = stmt.executeQuery(query);
 		while(rs.next()) {
 			ProcessModel PM = new ProcessModel();
@@ -24,7 +24,7 @@ public class ProcessDAO {
 
 	public static void insertProcessModel(String PM, Connection Conn) throws SQLException {
 		Statement stmt = Conn.createStatement();
-		String query = "INSERT INTO eventlog.process 'Name' VALUES '"+ PM  +"'";
+		String query = "INSERT INTO eventlog_ad_dt.process 'Name' VALUES '"+ PM  +"'";
 		stmt.executeUpdate(query);
 	}
 

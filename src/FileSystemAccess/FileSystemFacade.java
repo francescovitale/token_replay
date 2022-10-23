@@ -9,24 +9,26 @@ import PMLogic.*;
 
 public class FileSystemFacade {
 	private PetriNetReader PNR;
-	private DiagnosticsWriter DW;
+	private TRParameterReader TRPR;
 	private volatile static FileSystemFacade FSF = null;
 	
 	static String WorkingDirectory = System.getProperty("user.dir");
-	static String PetriNetsDirectory = WorkingDirectory + "\\PetriNets";
-	static String EventLogsDirectory = WorkingDirectory + "\\EventLogs";
-	static String ConfigurationParametersDirectory = WorkingDirectory + "\\Configurations";
-	static String DiagnosticsDirectory = WorkingDirectory + "\\Diagnostics";
+	static String PetriNetsDirectory = WorkingDirectory;
+	static String EventLogsDirectory = WorkingDirectory;
+	static String ConfigurationParametersDirectory = WorkingDirectory;
 
-	private FileSystemFacade() {
+	private FileSystemFacade(String RelativePath) {
+		PetriNetsDirectory = PetriNetsDirectory + "\\" + RelativePath + "\\PetriNets";
+		EventLogsDirectory = EventLogsDirectory + "\\" + RelativePath + "\\EventLogs";
+		ConfigurationParametersDirectory = ConfigurationParametersDirectory + "\\" + RelativePath + "\\Configurations";
 		PNR = new PetriNetReader(PetriNetsDirectory);
-		DW = new DiagnosticsWriter(DiagnosticsDirectory);
+		TRPR = new TRParameterReader(ConfigurationParametersDirectory);
 	}
-	public static FileSystemFacade getInstance() {
+	public static FileSystemFacade getInstance(String RelativePath) {
 		if(FSF==null) {
 			synchronized(FileSystemFacade.class) {
 				if(FSF==null) {
-					FSF = new FileSystemFacade();
+					FSF = new FileSystemFacade(RelativePath);
 				}
 			}
 		}
@@ -45,22 +47,28 @@ public class FileSystemFacade {
 		return PN;
 	}
 	
-	public void writeDiagnostics(Description D) {
+	
+	public ArrayList<TRParameter> getTRParameterList(ProcessModel PM){
+		ArrayList<TRParameter> TRPList = null;
+		
 		try {
-			DW.writeDiagnostics(D);
-		}catch (IOException e) {
+			TRPList = TRPR.getTRParameterList(PM);
+		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		return TRPList;
+		
 	}
 	
 	public static void main(String[] args) throws FileNotFoundException, IOException, SQLException {
-		ProcessModel PM = new ProcessModel("sample_pn");
+		ProcessModel PM = new ProcessModel("rbc_handover");
 		DBFacade DBF = new DBFacade();
 		ArrayList<ProcessModel> PMList = DBF.getProcessList();
 		ArrayList<Activity> AList = DBF.getActivityList(PMList);
 		
-		FileSystemFacade MyFSF = FileSystemFacade.getInstance();
+		FileSystemFacade MyFSF = FileSystemFacade.getInstance(args[0]);
 		PetriNet PN = MyFSF.getPetriNet(PM, AList);
 		for(int i=0;i<PN.getPlaces().size(); i++)
 			System.out.print(PN.getPlaces().get(i)+" ");
@@ -72,19 +80,20 @@ public class FileSystemFacade {
 		{
 			System.out.println();
 			for(int j=0; j<PN.getPlaces().size();j++) {
-				//if(PN.getTP().get(PN.getPlaces().get(j), PN.getTransitions().get(i).getName()) == null)
-					System.out.print(PN.getPT().get(PN.getPlaces().get(j), PN.getTransitions().get(i).getName()) + " ");
+					System.out.print(PN.getTP().get(PN.getPlaces().get(j), PN.getTransitions().get(i).getName()) + " ");
 			}
 		}
-		System.out.println();
-		for(int i=0;i<PN.getPlaces().size();i++)
-			System.out.println("Place: " + PN.getPlaces().get(i) + " has marking: " + PN.getMarking().get(PN.getPlaces().get(i)) + " ");
-		/*
-		ArrayList<TRParameter> TRPList = MyFSF.getTRParameterList(PM);
+		
+		/*ArrayList<TRParameter> TRPList = MyFSF.getTRParameterList(PM);
 		for(int i=0; i<TRPList.size(); i++) {
 			System.out.println("Resource: "+ TRPList.get(i).getResource() + " Parameter value: " + TRPList.get(i).getValue());
 		}
-		*/
+		System.out.println();
+		for(int i=0;i<PN.getPlaces().size();i++) {
+			System.out.println("Place: " + PN.getPlaces().get(i) + " marking value: " + PN.getMarking().get(PN.getPlaces().get(i)));
+		}*/
+		
+		
 	}
 	
 }

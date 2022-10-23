@@ -16,11 +16,13 @@ import DatabaseAccess.DBFacade;
 import PMLogic.Event;
 
 public class LogExtractor {
-	private String FilePath;
+	private String Path;
+	private String FileName;
 	private ArrayList<String> EList;
 	
-	public LogExtractor(String P){
-		FilePath = P;
+	public LogExtractor(String P, String FN){
+		Path = P;
+		FileName = FN;
 	}
 	
 	
@@ -39,11 +41,10 @@ public class LogExtractor {
 	}
 	
 	private void readCSV() throws FileNotFoundException, IOException{
-		File F = new File(FilePath);
+		File F = new File(Path+"/" + FileName);
 		EList = new ArrayList<String>();
 		try (BufferedReader br = new BufferedReader(new FileReader(F))) {
 		    String line;
-		    br.readLine();
 		    while ((line = br.readLine()) != null) {
 		       EList.add(line);
 		    }
@@ -63,31 +64,29 @@ public class LogExtractor {
 		Parts[0] = Parts[0].replaceAll("\"", "");
 		String Parts_ID[] = Parts[0].split("\\_");
 		CID = Integer.parseInt(Parts_ID[1]);
-		// System.out.println(CID);
+		//System.out.println(CID);
 		
 		Parts[1] = Parts[1].replaceAll("\"", "");
 		RegisteredActivity = Parts[1];
-		// System.out.println(RegisteredActivity);
+		//System.out.println(RegisteredActivity);
 		
 		Parts[2] = Parts[2].replaceAll("\"","");
 		Parts[2] = Parts[2].replaceAll("1970","2000");
 		String sDate = Parts[2];  
-	    Date date1=new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS").parse(sDate);  
+	    Date date1=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(sDate);  
 	    DateFormat targetFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 	    String formattedDate = targetFormat.format(date1); 
-	    // System.out.println(formattedDate);
+	    //System.out.println(formattedDate);
 	    T = formattedDate;
 		
-	    DBF.insertEvent(T, Resource, CID, RegisteredActivity, "sample_pn");
+	    DBF.insertEvent(T, Resource, CID, RegisteredActivity, "rbc_handover");
 		
 		return null;
 	}
 	
 	public static void main(String[] args) throws FileNotFoundException, IOException, ParseException, SQLException {
-		LogExtractor LE = new LogExtractor(args[0]);
+		LogExtractor LE = new LogExtractor(System.getProperty("user.dir") + "\\Input\\CCInput\\EventLogs", args[0]);
 		
-		DBFacade DBF = new DBFacade();
-		DBF.clearDatabase();
 		LE.readCSV();
 		LE.extractEvents();
 	}

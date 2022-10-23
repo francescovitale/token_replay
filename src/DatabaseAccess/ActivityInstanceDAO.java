@@ -17,7 +17,7 @@ public class ActivityInstanceDAO {
 		ArrayList<ProcessInstance> PIList, Connection Conn) throws SQLException {
 		ArrayList<ActivityInstance> AIList = new ArrayList<ActivityInstance>();
 		Statement stmt = Conn.createStatement();
-		String query = "SELECT * FROM eventlog.activityinstance";
+		String query = "SELECT * FROM eventlog_ad_dt.activityinstance";
 		ResultSet rs = stmt.executeQuery(query);
 		
 		
@@ -45,7 +45,7 @@ public class ActivityInstanceDAO {
 	public static void insertActivityInstance(String AIAct, int CaseID, Connection Conn) throws SQLException {
 		Statement stmt = Conn.createStatement();
 		// A Trace ID of -1 is inserted.
-		String query = "INSERT INTO eventlog.activityinstance (CaseID,Act,ATrace) VALUES ('"+ CaseID  +"','"+AIAct+"',null)";                 
+		String query = "INSERT INTO eventlog_ad_dt.activityinstance (CaseID,Act,ATrace) VALUES ('"+ CaseID  +"','"+AIAct+"',null)";                 
 		stmt.executeUpdate(query);
 	}
 	
@@ -55,7 +55,7 @@ public class ActivityInstanceDAO {
 		
 		// UPDATE table_name SET field1 = new-value1, field2 = new-value2
 		//		[WHERE Clause]
-		String query = "UPDATE eventlog.activityinstance SET ATrace = '"+ATID+"' WHERE ID = '"+ActID+"'";                 
+		String query = "UPDATE eventlog_ad_dt.activityinstance SET ATrace = '"+ATID+"' WHERE ID = '"+ActID+"'";                 
 		stmt.executeUpdate(query);
 	}
 
@@ -65,14 +65,7 @@ public class ActivityInstanceDAO {
 		
 		// UPDATE table_name SET field1 = new-value1, field2 = new-value2
 		//		[WHERE Clause]
-		String query = "UPDATE eventlog.activityinstance SET CaseID = null";                 
-		stmt.executeUpdate(query);
-		
-	}
-	
-	public static void deleteActivityInstances(Connection Conn) throws SQLException {
-		Statement stmt = Conn.createStatement();
-		String query = "DELETE FROM eventlog.activityinstance";     
+		String query = "UPDATE eventlog_ad_dt.activityinstance SET CaseID = null";                 
 		stmt.executeUpdate(query);
 		
 	}

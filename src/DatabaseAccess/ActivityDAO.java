@@ -14,7 +14,7 @@ public class ActivityDAO {
 		
 		ArrayList<Activity> AList = new ArrayList<Activity>();
 		Statement stmt = Conn.createStatement();
-		String query = "SELECT * FROM eventlog.activity";
+		String query = "SELECT * FROM eventlog_ad_dt.activity";
 		ResultSet rs = stmt.executeQuery(query);
 		while(rs.next()) {
 			Activity A;
@@ -35,7 +35,7 @@ public class ActivityDAO {
 
 	public static void insertActivity(Activity A, Connection Conn) throws SQLException {
 		Statement stmt = Conn.createStatement();
-		String query = "INSERT INTO eventlog.activity 'Name', 'ProcessModel','Resource' VALUES '"+A.getName()+"','"+ A.getPM().getName() +"','"+A.getResource()+"'";      
+		String query = "INSERT INTO eventlog_ad_dt.activity 'Name', 'ProcessModel','Resource' VALUES '"+A.getName()+"','"+ A.getPM().getName() +"','"+A.getResource()+"'";      
 		stmt.executeUpdate(query);
 	}
 }

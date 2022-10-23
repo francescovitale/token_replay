@@ -15,7 +15,7 @@ public class AnomalousTraceDAO {
 		
 		ArrayList<Trace> ATList = new ArrayList<Trace>();
 		Statement stmt = Conn.createStatement();
-		String query = "SELECT * FROM eventlog.anomaloustrace";
+		String query = "SELECT * FROM eventlog_ad_dt.anomaloustrace";
 		ResultSet rs = stmt.executeQuery(query);
 		
 		ArrayList<ActivityInstance> AIListPerTrace;
@@ -45,14 +45,7 @@ public class AnomalousTraceDAO {
 	
 	public static void insertAnomalousTrace(Connection Conn, int DID) throws SQLException {
 		Statement stmt = Conn.createStatement();
-		String query = "INSERT INTO eventlog.anomaloustrace (D) VALUES ('"+DID+"')";
+		String query = "INSERT INTO eventlog_ad_dt.anomaloustrace (D) VALUES ('"+DID+"')";
 		stmt.executeUpdate(query);
 	}
-	
-	public static void deleteAnomalousTraces(Connection Conn) throws SQLException {
-		Statement stmt = Conn.createStatement();
-		String query = "DELETE FROM eventlog.anomaloustrace";
-		stmt.executeUpdate(query);
-	}
-	
 }

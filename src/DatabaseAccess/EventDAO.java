@@ -18,7 +18,7 @@ public class EventDAO {
 		ArrayList<Event> EList = new ArrayList<Event>();
 		
 		Statement stmt = Conn.createStatement();
-		String query = "SELECT ID, round(unix_timestamp(Timestamp)*1000) as Timestamp, Resource, ActInst, CaseID FROM eventlog.event";
+		String query = "SELECT ID, round(unix_timestamp(Timestamp)*1000) as Timestamp, Resource, ActInst, CaseID FROM eventlog_ad_dt.event";
 		ResultSet rs = stmt.executeQuery(query);
 		
 		while(rs.next()) {
@@ -41,21 +41,14 @@ public class EventDAO {
 
 	public static void insertEvent(String Timestamp, String resource, int CaseID, int actID, Connection Conn) throws SQLException {
 		Statement stmt = Conn.createStatement();
-		String query = "INSERT INTO eventlog.event (Timestamp,Resource,ActInst,CaseID) VALUES ('"+ Timestamp +"','"+ resource +"','"+actID+"','"+CaseID+"')";
+		String query = "INSERT INTO eventlog_ad_dt.event (Timestamp,Resource,ActInst,CaseID) VALUES ('"+ Timestamp +"','"+ resource +"','"+actID+"','"+CaseID+"')";
 		stmt.executeUpdate(query);
 		
 	}
 	
 	public static void deleteEvent(int ActInst, Connection Conn) throws SQLException{
 		Statement stmt = Conn.createStatement();
-		String query = "DELETE FROM eventlog.event WHERE ActInst=" + ActInst;
-		stmt.executeUpdate(query);
-		
-	}
-	
-	public static void deleteEvents(Connection Conn) throws SQLException{
-		Statement stmt = Conn.createStatement();
-		String query = "DELETE FROM eventlog.event";
+		String query = "DELETE FROM eventlog_ad_dt.event WHERE ActInst=" + ActInst;
 		stmt.executeUpdate(query);
 		
 	}

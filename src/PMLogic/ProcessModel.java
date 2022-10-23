@@ -20,9 +20,9 @@ public
 	}
 	ProcessModel(ProcessModel PM_in){
 		Name = PM_in.getName();
-		AL = null;
-		PI = null;
-		P = null;
+		AL = new ArrayList<Activity>(PM_in.getAL());
+		PI = new ArrayList<ProcessInstance>(PM_in.getPI());
+		P = new PetriNet(PM_in.getP());
 	}
 	public String getName() {
 		return Name;

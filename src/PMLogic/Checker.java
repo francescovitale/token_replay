@@ -17,6 +17,7 @@ private
 	ArrayList<ProcessInstance> PI;
 	ArrayList<ProcessModel> P;
 	PetriNet PN;
+	ArrayList<TRParameter> TRP;
 	
 public
 	Checker(){}
@@ -33,7 +34,7 @@ public
 	// This method fetches the contents in the files that contain what's necessary for applying the Conformance Checking algorithm
 	void initializeFSDataStructures(FileSystemFacade FSF, ProcessModel PM) throws FileNotFoundException, IOException {
 		PN = FSF.getPetriNet(PM, A);
-		//TRP = FSF.getTRParameterList(PM);
+		TRP = FSF.getTRParameterList(PM);
 	}
 	
 	// This method performs the Conformance Checking through use of the Token Replay technique.
@@ -61,11 +62,9 @@ public
 				found_PM.add(PI.get(i).getP());
 		}
 		
-		//System.out.println(found_PM.get(0).getName());
-		
 		// This is the main cycle. It cycles over all the Process Models found in the Database.
 		for(int i = 0; i<found_PM.size(); i++) {
-			FileSystemFacade FSF = FileSystemFacade.getInstance();
+			FileSystemFacade FSF = FileSystemFacade.getInstance(Path);
 			// The private data structures stored in the files are fetched
 			initializeFSDataStructures(FSF,found_PM.get(i));
 			
@@ -75,16 +74,23 @@ public
 			// The last transition must be taken into account.
 			ObtainedTraces = buildTraces();
 			
+			/*
+			for(int j=0;j<ObtainedTraces.size();j++) {
+				for(int k=0; k<ObtainedTraces.get(j).getAI().size(); k++) {
+					System.out.print(ObtainedTraces.get(j).getAI().get(k).getA().getName() + " ");
+				}
+				System.out.println();
+			}
+			*/
 			
 			// To the ArrayList of Descriptions the results of the tokenReplay() method are considered.
 			// The tokenReplay method applies the Token Replay technique and infers a fitness parameter.
+			
+			
+			
 			CDL.add(tokenReplay(ObtainedTraces,aware));
 			
 			System.out.println("Fitness: " + CDL.get(i).getFitness());
-			System.out.println("Unfired activities:");
-			for(int j=0;j<PN.getTransitions().size();j++) 
-				System.out.print("Activity: " + PN.getTransitions().get(j).getName() + " was unfired " + 
-						CDL.get(i).getMissedActivities().get(PN.getTransitions().get(j).getName()) + " times\n"); 
 			for(int j=0;j<CDL.get(i).getT().size();j++) {
 				System.out.println("Anomalous trace " + j + ": ");
 				for(int k=0; k<CDL.get(i).getT().get(j).getAI().size(); k++)
@@ -105,20 +111,24 @@ public
 					ActID[k] = ObtainedTraces.get(j).getAI().get(k).getID();
 				//DBF.deleteEvent(ActID, CaseID);
 			}
-			FSF.writeDiagnostics(CDL.get(i));
 		}
 		for(int i=0; i<CDL.size(); i++)
 			for(int j=0; j<CDL.get(i).getT().size(); j++) {
 				ReturnedTraces.add(CDL.get(i).getT().get(j));
 				
 			}
-		
 		DBF.closeConnection();
 		return ReturnedTraces;
 	}
 	
 	// This method performs the so-called Token Replay technique.
 	Description tokenReplay(ArrayList<Trace> ProcessTraces, boolean Aware) {
+		
+		/*for(int i=0; i<ProcessTraces.size(); i++) {
+			for(int j=0;j<ProcessTraces.get(i).getAI().size(); j++)
+				System.out.print(ProcessTraces.get(i).getAI().get(j).getName() + " ");
+		}
+		System.out.println();*/
 		
 		// The data structures used are here defined. The ReplayParameters variable is initialized to
 		// hold the p, c, m and r variables. However, one should note that there are two of these variables:
@@ -131,6 +141,7 @@ public
 		String ActResource;
 		// The Token Replay techniques is applied for each trace.
 		for(int i=0; i<ProcessTraces.size(); i++) {
+			
 			ReplayParameters RPLocal = new ReplayParameters(1,0,0,0,false);
 			boolean end = false;
 			// The Token Replay technique fires each activity found in the trace.
@@ -143,10 +154,33 @@ public
 						AToFire = A.get(k);
 				// The activity is fired on the Petri Net. The Petri Net itself updates the parameters
 				
+				
 				RPLocalTemp = new ReplayParameters(RPLocal);
 				
-				
 				RPLocal = PN.fire(AToFire, RPLocal);
+				
+				
+				/*if(RPLocal.getM()-RPLocalTemp.getM()>0) {
+					
+					ArrayList<Activity> UnfiredActivities;
+					UnfiredActivities = PN.getUnfiredActivities();
+					for(int k = 0; k<UnfiredActivities.size(); k++) {
+						System.out.println("Unfired activity: " + UnfiredActivities.get(k).getName());
+					}
+					System.out.println();
+					
+					for(int k=0; k<UnfiredActivities.size(); k++) {
+						for(int l=0; l<A.size(); l++) {
+							if(UnfiredActivities.get(k).getName().equals(A.get(l).getName())) {
+								for(int s=0; s<TRP.size(); s++) {
+									if(TRP.get(s).getResource().equals(A.get(l).getResource())) {
+										TRP.get(s).setCounter(TRP.get(s).getCounter()+1);
+									}
+								}
+							}
+						}
+					}
+				}*/
 				
 				
 				//System.out.println("Iteration " + j + " for activity " + AToFire.getName() + ": Local p: "+RPLocal.getP() + " Local c: "+RPLocal.getC() + " Local m: "+RPLocal.getM() + "Local r: "+RPLocal.getR());
@@ -173,20 +207,24 @@ public
 			RPGlobal.setR(RPGlobal.getR()+RPLocal.getR());
 			// The Petri Net is re-initialized.
 			PN.initializeMarking();
+			PN.resetUnfiredActivities();
 		}
 		// The Fitness parameter is updated.
 		/*
 		 * Fitness(sigma, N, lambda_i) = (1/2(1-m/c)+1/2(1-r/p))(a/(1+sum_i lambda_i*m_i)+(1-a))
 		 */
 		float Second_factor_den_sum = (float) 1.0;
+		for(int i=0; i<TRP.size(); i++) {
+			Second_factor_den_sum += (float)((float)TRP.get(i).getCounter()*(float)TRP.get(i).getValue());
+		}
 		float Second_factor = (float)(Aware ? 0 : 1)/((float)Second_factor_den_sum) + 1-(float)(Aware ? 0 : 1);
+		//System.out.println("Second factor:" + Second_factor);
 		
 		float First_factor = ((float)1/2 * (1-((float)RPGlobal.getM()/((float)RPGlobal.getC()))) + (float)1/2 * (1-((float)RPGlobal.getR()/((float)RPGlobal.getP()))));
+		//System.out.println("First factor:" + First_factor);
 		Fitness = (float)(First_factor * Second_factor);
 		
 		DL.setFitness(Fitness);
-		DL.setMissedActivities(PN.getUnfiredActivities());
-		PN.resetUnfiredActivities();
 		
 		return DL;
 	}
@@ -201,6 +239,7 @@ public
 			// The trace, for each Process Instance, is obtained through ordering the events using the 
 			// orderEvents() method
 			Trace ExtractedTrace = orderEvents(PI.get(i).getCaseID());
+			
 			// The trace is checked for completeness through the isComplete() method.
 			if(isComplete(ExtractedTrace)) {
 				BuiltTraces.add(ExtractedTrace);
@@ -216,7 +255,8 @@ public
 		boolean complete = false;
 		if(T.getAI().size() != 0) {
 			ActivityInstance LastActivity = T.getAI().get(T.getAI().size()-1);
-			if(LastActivity.getA().getName().equals(PN.getTerminatingEvent())) {
+			//System.out.println(PN.getLastTransition());
+			if(LastActivity.getA().getName().equals(PN.getLastTransition())) {
 				complete = true;
 			}
 		}
@@ -286,16 +326,7 @@ public
 	public static void main(String[] args) throws FileNotFoundException, IOException, SQLException {
 		Checker C = new Checker();
 		boolean aware = true;
-		
-		
-		ArrayList<Trace> NonConformantTraces = C.onlineConformanceChecking(aware, null);
-		/*for(int i=0; i<NonConformantTraces.size(); i++) {
-			System.out.print("Non conformant trace " + i + ": ");
-			for(int j=0; j<NonConformantTraces.get(i).getAI().size(); j++)
-				System.out.print(NonConformantTraces.get(i).getAI().get(j).getA().getName() + " ");
-			System.out.println();
-		}
-		*/
+		ArrayList<Trace> NonConformantTraces = C.onlineConformanceChecking(aware, args[0]);
 	}
 	
 	

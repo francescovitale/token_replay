@@ -15,7 +15,7 @@ public class ProcessInstanceDAO {
 		
 		ArrayList<ProcessInstance> PIList = new ArrayList<ProcessInstance>();
 		Statement stmt = Conn.createStatement();
-		String query = "SELECT * FROM eventlog.processinstance";
+		String query = "SELECT * FROM eventlog_ad_dt.processinstance";
 		ResultSet rs = stmt.executeQuery(query);
 		while(rs.next()) {
 			ProcessInstance PI;
@@ -40,7 +40,7 @@ public class ProcessInstanceDAO {
 				found = true;
 		if(found == false) {
 			Statement stmt = Conn.createStatement();
-			String query = "INSERT INTO eventlog.processinstance (CaseID,ProcessModel) VALUES ('"+ CaseID  +"','"+PMName+"')";
+			String query = "INSERT INTO eventlog_ad_dt.processinstance (CaseID,ProcessModel) VALUES ('"+ CaseID  +"','"+PMName+"')";
 			stmt.executeUpdate(query);
 		}
 			
@@ -48,13 +48,7 @@ public class ProcessInstanceDAO {
 	
 	public static void deleteProcessInstance(int CaseID, Connection Conn) throws SQLException {
 		Statement stmt = Conn.createStatement();
-		String query = "DELETE FROM eventlog.processinstance WHERE CaseID=" + CaseID;
-		stmt.executeUpdate(query);
-	}
-	
-	public static void deleteProcessInstances(Connection Conn) throws SQLException {
-		Statement stmt = Conn.createStatement();
-		String query = "DELETE FROM eventlog.processinstance";
+		String query = "DELETE FROM eventlog_ad_dt.processinstance WHERE CaseID=" + CaseID;
 		stmt.executeUpdate(query);
 	}
 

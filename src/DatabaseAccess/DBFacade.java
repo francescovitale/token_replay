@@ -177,22 +177,6 @@ public
 		ActivityInstanceDAO.insertActivityInstance(AIAct, CaseID, Conn);
 	};
 	
-	public void clearDatabase() {
-		
-		try {
-			EventDAO.deleteEvents(Conn);
-			ActivityInstanceDAO.deleteActivityInstances(Conn);
-			ProcessInstanceDAO.deleteProcessInstances(Conn);
-			AnomalousTraceDAO.deleteAnomalousTraces(Conn);
-			DescriptionDAO.deleteDescriptions(Conn);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
-		
-	}
 	
 	
 	
@@ -242,66 +226,6 @@ public
 			TS = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
 			DBF.insertEvent(TS,"dmi", 0, "som_end", "StartOfMission");*/
 			
-			TS = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
-			DBF.insertEvent(TS,"dmi", 0, "A", "sample_pn");
-			TS = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
-			DBF.insertEvent(TS,"dmi", 0, "XOR_A_C", "sample_pn");
-			TS = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
-			DBF.insertEvent(TS,"dmi", 0, "C", "sample_pn");
-			TS = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
-			DBF.insertEvent(TS,"dmi", 0, "XOR_C_A", "sample_pn");
-			TS = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
-			DBF.insertEvent(TS,"dmi", 0, "A", "sample_pn");
-			TS = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
-			DBF.insertEvent(TS,"dmi", 0, "XOR_A_C", "sample_pn");
-			TS = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
-			DBF.insertEvent(TS,"dmi", 0, "C", "sample_pn");
-			TS = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
-			DBF.insertEvent(TS,"dmi", 0, "XOR_C_A", "sample_pn");
-			TS = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
-			DBF.insertEvent(TS,"dmi", 0, "A", "sample_pn");
-			TS = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
-			DBF.insertEvent(TS,"dmi", 0, "XOR_A_B", "sample_pn");
-			TS = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
-			DBF.insertEvent(TS,"dmi", 0, "B", "sample_pn");
-			TS = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
-			DBF.insertEvent(TS,"evc", 0, "D", "sample_pn");
-			TS = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
-			DBF.insertEvent(TS,"evc", 0, "XOR_D_F", "sample_pn");
-			TS = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
-			DBF.insertEvent(TS,"rtm", 0, "F", "sample_pn");
-			TS = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
-			DBF.insertEvent(TS,"rtm", 0, "XOR_F_A", "sample_pn");
-			TS = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
-			DBF.insertEvent(TS,"dmi", 0, "A", "sample_pn");
-			TS = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
-			DBF.insertEvent(TS,"dmi", 0, "XOR_A_C", "sample_pn");
-			TS = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
-			DBF.insertEvent(TS,"rtm", 0, "C", "sample_pn");
-			TS = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
-			DBF.insertEvent(TS,"dmi", 0, "XOR_C_A", "sample_pn");
-			TS = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
-			DBF.insertEvent(TS,"evc", 0, "A", "sample_pn");
-			TS = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
-			DBF.insertEvent(TS,"evc", 0, "XOR_A_B", "sample_pn");
-			TS = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
-			DBF.insertEvent(TS,"rbc", 0, "B", "sample_pn");
-			TS = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
-			DBF.insertEvent(TS,"dmi", 0, "D", "sample_pn");
-			TS = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
-			DBF.insertEvent(TS,"dmi", 0, "XOR_D_F", "sample_pn");
-			TS = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
-			DBF.insertEvent(TS,"dmi", 0, "F", "sample_pn");
-			TS = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
-			DBF.insertEvent(TS,"dmi", 0, "XOR_F_H", "sample_pn");
-			TS = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
-			DBF.insertEvent(TS,"dmi", 0, "H", "sample_pn");
-			TS = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
-			DBF.insertEvent(TS,"dmi", 0, "I", "sample_pn");
-			TS = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
-			DBF.insertEvent(TS,"dmi", 0, "XOR_I_L", "sample_pn");
-			TS = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
-			DBF.insertEvent(TS,"dmi", 0, "L", "sample_pn");
 			/*DBF.insertEvent("dmi", 1, "som_start", "StartOfMission");
 			DBF.insertEvent("dmi", 1, "som_enterid_dmi_1", "StartOfMission");
 			DBF.insertEvent("dmi", 1, "som_retry_dmi_1", "StartOfMission");
@@ -365,13 +289,13 @@ public
 				System.out.println(AIList.get(i).getID() + " " + AIList.get(i).getPI().getCaseID() + " " + AIList.get(i).getA().getName());
 			System.out.println();
 			
-			ArrayList<Event> EList = DBF.getEventList(PIList, AIList);
+			/*ArrayList<Event> EList = DBF.getEventList(PIList, AIList);
 			System.out.println("Events:");
 			for(int i=0;i<EList.size(); i++)
 				System.out.println(EList.get(i).getID() + " " + EList.get(i).getT() + " " + EList.get(i).getResource() + " "+ EList.get(i).getPI().getCaseID() + " "+ EList.get(i).getAI().getA().getName());
 			System.out.println();
 			
-			/*int[] ActID = new int[3];
+			int[] ActID = new int[3];
 			ActID[0] = 1026;
 			ActID[1] = 1027;
 			ActID[2] = 1028;
