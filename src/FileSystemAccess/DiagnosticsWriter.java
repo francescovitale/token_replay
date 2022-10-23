@@ -1,39 +1,30 @@
 package FileSystemAccess;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
-import PMLogic.Activity;
 import PMLogic.Description;
-import PMLogic.Trace;
 
 public class DiagnosticsWriter {
-	private String DiagnosticsPath;
+	private String DiagnosticsDirectory;
 	
-	public DiagnosticsWriter(String dir) {
-		DiagnosticsPath = dir;
-		
+	public DiagnosticsWriter(String Dir) {
+		DiagnosticsDirectory = Dir;
 	}
 	
-	public void writeDiagnostics(Description Statistics) throws IOException {
+	public void WriteDiagnostics(Description D) throws IOException {
+		String DiagnosticsFilePath = DiagnosticsDirectory + "//cf_diagnostics.txt";
+		BufferedWriter writer = new BufferedWriter(new FileWriter(DiagnosticsFilePath));
+	    writer.write("Fitness="+Float.toString(D.getFitness()) + "\n");
+	    HashMap<String, Integer> UnfiredActivitiesDiagnostics = D.getAnomalyCount();
+
+	    for (String key : UnfiredActivitiesDiagnostics.keySet()) {
+	    	writer.write(key + "=" + Integer.toString(UnfiredActivitiesDiagnostics.get(key)) + "\n");
+	    }
+	    
+	    writer.close();
 		
-		HashMap<String, Integer> MissedActivitiesCount = Statistics.getMissedActivities();
-		
-		BufferedWriter writer = null;
-		File ControlFlowDiagnosticsFile = new File(DiagnosticsPath + "\\cf_diagnostics.txt");
-		
-		writer = new BufferedWriter(new FileWriter(ControlFlowDiagnosticsFile));
-		writer.write("Log fitness:" + Statistics.getFitness() + "\n");
-        for (Map.Entry<String, Integer> set :
-        	MissedActivitiesCount.entrySet()) {
-        	writer.write(set.getKey()+ ":"+ set.getValue()+"\n");
-        }
-		writer.close();
-	
 	}
 }

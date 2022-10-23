@@ -38,7 +38,7 @@ public
 	}
 	
 	// This method performs the Conformance Checking through use of the Token Replay technique.
-	public ArrayList<Trace> onlineConformanceChecking(boolean aware, String Path) throws FileNotFoundException, IOException, SQLException{
+	public ArrayList<Trace> onlineConformanceChecking(boolean aware, String InputPath, String OutputPath) throws FileNotFoundException, IOException, SQLException{
 		DBFacade DBF = new DBFacade();
 		
 		// The private data structures stored in the Database are fetched
@@ -64,7 +64,8 @@ public
 		
 		// This is the main cycle. It cycles over all the Process Models found in the Database.
 		for(int i = 0; i<found_PM.size(); i++) {
-			FileSystemFacade FSF = FileSystemFacade.getInstance(Path);
+			
+			FileSystemFacade FSF = FileSystemFacade.getInstance(InputPath, OutputPath);
 			// The private data structures stored in the files are fetched
 			initializeFSDataStructures(FSF,found_PM.get(i));
 			
@@ -86,21 +87,25 @@ public
 			// To the ArrayList of Descriptions the results of the tokenReplay() method are considered.
 			// The tokenReplay method applies the Token Replay technique and infers a fitness parameter.
 			
-			
-			
 			CDL.add(tokenReplay(ObtainedTraces,aware));
 			
 			System.out.println("Fitness: " + CDL.get(i).getFitness());
+			/*
 			for(int j=0;j<CDL.get(i).getT().size();j++) {
 				System.out.println("Anomalous trace " + j + ": ");
 				for(int k=0; k<CDL.get(i).getT().get(j).getAI().size(); k++)
 					System.out.print(CDL.get(i).getT().get(j).getAI().get(k).getA().getName()+ " ");
 				System.out.println();
+				
 				int[] ActID = new int[CDL.get(i).getT().get(j).getAI().size()];
 				for(int k=0; k<ActID.length; k++)
 					ActID[k] = CDL.get(i).getT().get(j).getAI().get(k).getID();
 				DBF.insertAnomalousTrace(ActID, CDL.get(i).getFitness());
 				
+			}
+			*/
+			for(int k=0; k<PN.getTransitions().size(); k++) {
+				System.out.println("Number of anomalies for transition " + PN.getTransitions().get(k).getName() + ": " + CDL.get(i).getAnomalyCount().get(PN.getTransitions().get(k).getName()));
 			}
 			int[] ActID;
 			int CaseID;
@@ -111,6 +116,7 @@ public
 					ActID[k] = ObtainedTraces.get(j).getAI().get(k).getID();
 				//DBF.deleteEvent(ActID, CaseID);
 			}
+			FSF.writeDiagnostics(CDL.get(i));
 		}
 		for(int i=0; i<CDL.size(); i++)
 			for(int j=0; j<CDL.get(i).getT().size(); j++) {
@@ -123,7 +129,10 @@ public
 	
 	// This method performs the so-called Token Replay technique.
 	Description tokenReplay(ArrayList<Trace> ProcessTraces, boolean Aware) {
-		
+		HashMap<String, Integer> AnomalyCount = new HashMap<String, Integer>();
+		for(int j=0; j<PN.getTransitions().size(); j++) {
+			AnomalyCount.put(PN.getTransitions().get(j).getName(), 0);
+		}
 		/*for(int i=0; i<ProcessTraces.size(); i++) {
 			for(int j=0;j<ProcessTraces.get(i).getAI().size(); j++)
 				System.out.print(ProcessTraces.get(i).getAI().get(j).getName() + " ");
@@ -139,6 +148,7 @@ public
 		ReplayParameters RPGlobal = new ReplayParameters();
 		ReplayParameters RPLocalTemp;
 		String ActResource;
+		ArrayList<Activity> UnfiredActivities = new ArrayList<Activity>();
 		// The Token Replay techniques is applied for each trace.
 		for(int i=0; i<ProcessTraces.size(); i++) {
 			
@@ -160,10 +170,13 @@ public
 				RPLocal = PN.fire(AToFire, RPLocal);
 				
 				
-				/*if(RPLocal.getM()-RPLocalTemp.getM()>0) {
+				
+				
+				if(RPLocal.getM()-RPLocalTemp.getM()>0) {
 					
-					ArrayList<Activity> UnfiredActivities;
+					
 					UnfiredActivities = PN.getUnfiredActivities();
+					/*
 					for(int k = 0; k<UnfiredActivities.size(); k++) {
 						System.out.println("Unfired activity: " + UnfiredActivities.get(k).getName());
 					}
@@ -179,8 +192,8 @@ public
 								}
 							}
 						}
-					}
-				}*/
+					}*/
+				}
 				
 				
 				//System.out.println("Iteration " + j + " for activity " + AToFire.getName() + ": Local p: "+RPLocal.getP() + " Local c: "+RPLocal.getC() + " Local m: "+RPLocal.getM() + "Local r: "+RPLocal.getR());
@@ -200,6 +213,11 @@ public
 				if(found == false)
 					DL.getT().add(ProcessTraces.get(i));
 			}
+			//ArrayList<Activity> UnfiredActivities = PN.getUnfiredActivities();
+			for(int j=0;j<UnfiredActivities.size(); j++) {
+				AnomalyCount.put(UnfiredActivities.get(j).getName(), AnomalyCount.get(UnfiredActivities.get(j).getName())+1);
+			}
+			
 			// RPGlobal is updated.
 			RPGlobal.setC(RPGlobal.getC()+RPLocal.getC());
 			RPGlobal.setP(RPGlobal.getP()+RPLocal.getP());
@@ -225,6 +243,7 @@ public
 		Fitness = (float)(First_factor * Second_factor);
 		
 		DL.setFitness(Fitness);
+		DL.setAnomalyCount(AnomalyCount);
 		
 		return DL;
 	}
@@ -326,7 +345,7 @@ public
 	public static void main(String[] args) throws FileNotFoundException, IOException, SQLException {
 		Checker C = new Checker();
 		boolean aware = true;
-		ArrayList<Trace> NonConformantTraces = C.onlineConformanceChecking(aware, args[0]);
+		ArrayList<Trace> NonConformantTraces = C.onlineConformanceChecking(aware, args[0], args[1]);
 	}
 	
 	

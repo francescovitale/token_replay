@@ -10,25 +10,29 @@ import PMLogic.*;
 public class FileSystemFacade {
 	private PetriNetReader PNR;
 	private TRParameterReader TRPR;
+	private DiagnosticsWriter DW;
 	private volatile static FileSystemFacade FSF = null;
 	
 	static String WorkingDirectory = System.getProperty("user.dir");
 	static String PetriNetsDirectory = WorkingDirectory;
 	static String EventLogsDirectory = WorkingDirectory;
 	static String ConfigurationParametersDirectory = WorkingDirectory;
+	static String DiagnosticsDirectory = WorkingDirectory;
 
-	private FileSystemFacade(String RelativePath) {
-		PetriNetsDirectory = PetriNetsDirectory + "\\" + RelativePath + "\\PetriNets";
-		EventLogsDirectory = EventLogsDirectory + "\\" + RelativePath + "\\EventLogs";
-		ConfigurationParametersDirectory = ConfigurationParametersDirectory + "\\" + RelativePath + "\\Configurations";
+	private FileSystemFacade(String InputRelativePath, String OutputRelativePath) {
+		PetriNetsDirectory = PetriNetsDirectory + "\\" + InputRelativePath + "\\PetriNets";
+		EventLogsDirectory = EventLogsDirectory + "\\" + InputRelativePath + "\\EventLogs";
+		ConfigurationParametersDirectory = ConfigurationParametersDirectory + "\\" + InputRelativePath + "\\Configurations";
+		DiagnosticsDirectory = DiagnosticsDirectory + "\\" +OutputRelativePath + "\\Diagnostics";
 		PNR = new PetriNetReader(PetriNetsDirectory);
 		TRPR = new TRParameterReader(ConfigurationParametersDirectory);
+		DW = new DiagnosticsWriter(DiagnosticsDirectory);
 	}
-	public static FileSystemFacade getInstance(String RelativePath) {
+	public static FileSystemFacade getInstance(String InputRelativePath, String OutputRelativePath) {
 		if(FSF==null) {
 			synchronized(FileSystemFacade.class) {
 				if(FSF==null) {
-					FSF = new FileSystemFacade(RelativePath);
+					FSF = new FileSystemFacade(InputRelativePath, OutputRelativePath);
 				}
 			}
 		}
@@ -62,13 +66,24 @@ public class FileSystemFacade {
 		
 	}
 	
+	public void writeDiagnostics(Description CDL) {
+		try {
+			DW.WriteDiagnostics(CDL);
+		} catch (FileNotFoundException e) {
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public static void main(String[] args) throws FileNotFoundException, IOException, SQLException {
 		ProcessModel PM = new ProcessModel("rbc_handover");
 		DBFacade DBF = new DBFacade();
 		ArrayList<ProcessModel> PMList = DBF.getProcessList();
 		ArrayList<Activity> AList = DBF.getActivityList(PMList);
 		
-		FileSystemFacade MyFSF = FileSystemFacade.getInstance(args[0]);
+		FileSystemFacade MyFSF = FileSystemFacade.getInstance(args[0], args[1]);
 		PetriNet PN = MyFSF.getPetriNet(PM, AList);
 		for(int i=0;i<PN.getPlaces().size(); i++)
 			System.out.print(PN.getPlaces().get(i)+" ");
