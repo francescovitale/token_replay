@@ -18,7 +18,7 @@ public class DiagnosticsWriter {
 		String DiagnosticsFilePath = DiagnosticsDirectory + "//cf_diagnostics.txt";
 		BufferedWriter writer = new BufferedWriter(new FileWriter(DiagnosticsFilePath));
 	    writer.write("Fitness="+Float.toString(D.getFitness()) + "\n");
-	    HashMap<String, Integer> UnfiredActivitiesDiagnostics = D.getAnomalyCount();
+	    HashMap<String, Integer> UnfiredActivitiesDiagnostics = D.getMissedActivities();
 
 	    for (String key : UnfiredActivitiesDiagnostics.keySet()) {
 	    	writer.write(key + "=" + Integer.toString(UnfiredActivitiesDiagnostics.get(key)) + "\n");

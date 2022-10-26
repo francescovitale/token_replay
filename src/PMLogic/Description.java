@@ -7,27 +7,25 @@ private
 	int ID;
 	float Fitness;
 	ArrayList<Trace> T;
-	HashMap<String, Integer> AnomalyCount;
+	HashMap<String,Integer> MissedActivities;
 	
 public
 	Description() {
 		ID = -1;
 		Fitness = (float) 0.0;
 		T = new ArrayList<Trace>();
-		AnomalyCount = new HashMap<String, Integer>();
+		MissedActivities = new HashMap<String,Integer>();
 	}
 
-	Description(float Fitness_in, ArrayList<Trace> T_in, HashMap<String, Integer> AnomalyCount_in) {
+	Description(float Fitness_in, ArrayList<Trace> T_in) {
 		ID = -1;
 		Fitness = Fitness_in;
 		T = new ArrayList<Trace>(T_in);
-		AnomalyCount = new HashMap<String, Integer>(AnomalyCount_in);
 	}
 	Description(Description CD){
 		ID = CD.getID();
 		Fitness = CD.getFitness();
 		T = CD.getT();
-		AnomalyCount = CD.getAnomalyCount();
 	}
 
 	public float getFitness() {
@@ -51,11 +49,11 @@ public
 		ID = iD;
 	}
 
-	public HashMap<String, Integer> getAnomalyCount() {
-		return AnomalyCount;
+	public HashMap<String, Integer> getMissedActivities() {
+		return MissedActivities;
 	}
 
-	public void setAnomalyCount(HashMap<String, Integer> anomalyCount) {
-		AnomalyCount = anomalyCount;
+	public void setMissedActivities(HashMap<String, Integer> missedActivities) {
+		MissedActivities = missedActivities;
 	}
 }

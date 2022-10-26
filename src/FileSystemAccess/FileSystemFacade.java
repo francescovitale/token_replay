@@ -9,7 +9,6 @@ import PMLogic.*;
 
 public class FileSystemFacade {
 	private PetriNetReader PNR;
-	private TRParameterReader TRPR;
 	private DiagnosticsWriter DW;
 	private volatile static FileSystemFacade FSF = null;
 	
@@ -25,7 +24,6 @@ public class FileSystemFacade {
 		ConfigurationParametersDirectory = ConfigurationParametersDirectory + "\\" + InputRelativePath + "\\Configurations";
 		DiagnosticsDirectory = DiagnosticsDirectory + "\\" +OutputRelativePath + "\\Diagnostics";
 		PNR = new PetriNetReader(PetriNetsDirectory);
-		TRPR = new TRParameterReader(ConfigurationParametersDirectory);
 		DW = new DiagnosticsWriter(DiagnosticsDirectory);
 	}
 	public static FileSystemFacade getInstance(String InputRelativePath, String OutputRelativePath) {
@@ -49,21 +47,6 @@ public class FileSystemFacade {
 			e.printStackTrace();
 		}
 		return PN;
-	}
-	
-	
-	public ArrayList<TRParameter> getTRParameterList(ProcessModel PM){
-		ArrayList<TRParameter> TRPList = null;
-		
-		try {
-			TRPList = TRPR.getTRParameterList(PM);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return TRPList;
-		
 	}
 	
 	public void writeDiagnostics(Description CDL) {

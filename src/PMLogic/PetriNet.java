@@ -34,9 +34,10 @@ private
 	BiHashMap<String,String,Boolean> PT;
 	BiHashMap<String,String,Boolean> TP;
 	HashMap<String,Integer> Marking;
-	String LastTransition;
+	HashMap<String,Integer> DefaultMarking;
+	String TerminatingEvent;
 	
-	static ArrayList<UnfiredActivity> UA = new ArrayList<UnfiredActivity>();
+	static HashMap<String,Integer> UA = new HashMap<String,Integer>();
 public
 	PetriNet() {
 		P = null;
@@ -45,17 +46,23 @@ public
 		PT = null;
 		TP = null;
 		Marking = null;
-		LastTransition = null;
+		DefaultMarking = null;
+		TerminatingEvent = null;
+		UA = null;
 	}
 
-	public PetriNet(ProcessModel P_in, ArrayList<String> Places_in, ArrayList<Activity> Transitions_in, BiHashMap<String,String,Boolean> PT_in, BiHashMap<String,String,Boolean> TP_in,HashMap<String,Integer> Marking_in, String LastTransition_in ) {
-		P = P_in;
-		Places = Places_in;
-		Transitions = Transitions_in;
+	public PetriNet(ProcessModel P_in, ArrayList<String> Places_in, ArrayList<Activity> Transitions_in, BiHashMap<String,String,Boolean> PT_in, BiHashMap<String,String,Boolean> TP_in,
+			HashMap<String,Integer> DefaultMarking_in, String TerminatingEvent_in) {
+		P = new ProcessModel(P_in);
+		Places = new ArrayList<String>(Places_in);
+		Transitions = new ArrayList<Activity>(Transitions_in);
 		PT = PT_in;
 		TP = TP_in;
-		Marking = Marking_in;
-		LastTransition = LastTransition_in;
+		DefaultMarking = new HashMap<String,Integer>(DefaultMarking_in);
+		Marking = new HashMap<String,Integer>(DefaultMarking_in);
+		TerminatingEvent = TerminatingEvent_in;
+		for(int i=0;i<Transitions.size();i++)
+			UA.put(Transitions.get(i).getName(), 0);
 	}
 
 	public PetriNet(PetriNet PN){
@@ -65,49 +72,29 @@ public
 		PT = new BiHashMap<String,String,Boolean>(PN.getPT());
 		TP = new BiHashMap<String,String,Boolean>(PN.getTP());
 		Marking = new HashMap<String,Integer>(PN.getMarking());
-		LastTransition = PN.getLastTransition();
+		DefaultMarking = new HashMap<String,Integer>(PN.getDefaultMarking());
+		TerminatingEvent = PN.getTerminatingEvent();
 	}
 
-	ReplayParameters fire(Activity A, ReplayParameters P) {
+ReplayParameters fire(Activity A, ReplayParameters P) {
 		
 		int missingTokens = countM(A.getName(),false);
 		
 		if(P.getM()<P.getM()+missingTokens) {
 			
 			ArrayList<Activity> EnabledActivities = getEnabledActivities();
-			//System.out.println(EnabledActivities.size());
 			
-			//System.out.println();
 			for(int i=0; i<EnabledActivities.size(); i++) {
-				if(UA.size() == 0) {
-					UA.add(new UnfiredActivity(EnabledActivities.get(i)));
-				}
-				else {
-					boolean found = false;
-					int k = 0;
-					while(found == false && k < UA.size()) {
-						if(EnabledActivities.get(i).getName().equals(UA.get(k).getActivity().getName())) {
-							found = true;
-						}
-						k++;
-					}
-					if(found == false) {
-						UA.add(new UnfiredActivity(EnabledActivities.get(i)));
-					}
-					
-				}
+				UA.put(EnabledActivities.get(i).getName(), UA.get(EnabledActivities.get(i).getName())+1);
 			}
-			/*for(int i=0; i<UA.size(); i++) {
-				System.out.println(UA.get(i).isTaken());
-			}*/
 		}
 		
 		P.setM(P.getM() + countM(A.getName(),true));
 		P.setC(P.getC() + countC(A.getName()));
 		P.setP(P.getP() + countP(A.getName()));
-		if(A.getName().equals(LastTransition)) {
+		if(Marking.get(Places.get(Places.size()-1)) != 0) {
 			P.setC(P.getC()+1);
-			Marking.put("end", Marking.get("end")-1);
+			Marking.put(Places.get(Places.size()-1), Marking.get(Places.get(Places.size()-1))-1);
 			P.setEnd(true);
 			P.setR(countR());
 		}
@@ -134,85 +121,18 @@ public
 					canFire = false;
 			}
 			if(canFire) {
-				// This section is for when the successive activities are artificial: there's
-				// the need to extract the next non-artificial activity.
-							
-				// We can exploit the fact that the next artificial activity can only be:
-				// 		1) The merge activity of a join gateway. In this case, the merge activity
-				//		   has the form <internal_act>_merge_<succ_act>
-				// 		2) The merge activity of a split gateway. In this case, the merge activity
-				// 		   has the form <prev_act>_merge_<internal_act>_..._<internal_act>
-				
-				String [] Parts = Transitions.get(i).getName().split("_merge_");
-				if(Parts.length<=1) {
-					//System.out.println("The activity is not an artificial activity");
-					EnabledActivities.add(Transitions.get(i));
-				}
-				else {
-					String [] NextActivities = Parts[1].split("som_");
-					if(NextActivities.length <= 2) {
-						/*System.out.println("The found artificial activity is the merge activity of a join gateway");
-						System.out.println(Parts[1]);*/
-						NextActivities[1] = "som_" + NextActivities[1];
-						for(int k=0; k<Transitions.size(); k++) {
-							if(Transitions.get(k).getName().equals(NextActivities[1])) {
-								/*System.out.println("Transitions.get(k).getName(): "+ Transitions.get(k).getName());
-								System.out.println("NextActivities[1]: "+ NextActivities[1]);		*/
-								EnabledActivities.add(Transitions.get(k));
-							}
-						}
-						//System.out.println(NextActivities[1]);
-					}
-					else if(NextActivities.length >2) {
-						/*System.out.println("The found artificial activity is the merge activity of a split gateway");
-						System.out.println(Parts[1]);*/
-						for(int j = 1; j<NextActivities.length; j++) {
-							if(j<NextActivities.length-1) {
-								NextActivities[j] = "som_" + NextActivities[j].substring(0,NextActivities[j].length()-1);
-								for(int k=0; k<Transitions.size(); k++) {
-									
-									if(Transitions.get(k).getName().equals(NextActivities[j])) {
-										/*System.out.println("Transitions.get(k).getName(): "+ Transitions.get(k).getName());
-										System.out.println("NextActivities[j]: "+ NextActivities[j]);*/
-										EnabledActivities.add(Transitions.get(k));
-									}
-								}
-							}
-							else {
-								NextActivities[j] = "som_" + NextActivities[j];
-								for(int k=0; k<Transitions.size(); k++) {
-									if(Transitions.get(k).getName().equals(NextActivities[j])) {
-										/*System.out.println("Transitions.get(k).getName(): "+ Transitions.get(k).getName());
-										System.out.println("NextActivities[j]: "+ NextActivities[j]);*/
-										EnabledActivities.add(Transitions.get(k));
-									}
-								}
-							}
-						}
-					}
-				}
+				EnabledActivities.add(Transitions.get(i));
 			}
 		}
-		
-		
 		return EnabledActivities;
 	}
 	
-	public ArrayList<Activity> getUnfiredActivities(){
-		ArrayList<Activity> ReturnedList = new ArrayList<Activity>();
+	public HashMap<String,Integer> getUnfiredActivities(){
+		HashMap<String,Integer> ReturnedMap;
 		
-		for(int i=0; i<UA.size(); i++) {
-			//System.out.println("getUnfiredActivities() " + UA.get(i).getActivity().getName() + " " + UA.get(i).isTaken());
-			if(!UA.get(i).isTaken()) {
-				
-				UA.get(i).setTaken(true);
-				
-				ReturnedList.add(UA.get(i).getActivity());
-			}
-			
-		}
+		ReturnedMap = new HashMap<String,Integer>(UA);
 		
-		return ReturnedList;
+		return ReturnedMap;
 	}
 
 	int countC(String ActivityName) {
@@ -242,16 +162,18 @@ public
 	}
 	
 	int countM(String ActivityName, boolean clear) {
-		
-		
 		int m = 0;
 		ArrayList<String> PlacesToSet = new ArrayList<String>();
+		
 		for(int i=0; i<Places.size(); i++) {
 			if(PT.get(Places.get(i), ActivityName) == true && Marking.get(Places.get(i)) == 0) {
+				//System.out.println("Activity to fire: " + ActivityName + ", Place considered: " + Places.get(i) +", PT value: " + PT.get(Places.get(i), ActivityName) 
+				//+ ", Actual marking value: " + Marking.get(Places.get(i)));
 				m++;
 				PlacesToSet.add(Places.get(i));
 			}
 		}
+		
 		if(clear == true)
 			updateMarking(PlacesToSet, null);
 		return m;
@@ -262,17 +184,11 @@ public
 		for(int i=0; i<Places.size(); i++) {
 			r = r + Marking.get(Places.get(i));
 		}
-		
 		return r;
 	}
 	
 	void initializeMarking() {
-		for(int i=0; i<Places.size(); i++) {
-			if(i == 0)
-				Marking.put(Places.get(i), 1);
-			else
-				Marking.put(Places.get(i), 0);
-		}
+		Marking = new HashMap<String, Integer>(DefaultMarking);
 	};
 	void updateMarking(ArrayList<String> PlacesToSet, ArrayList<String> PlacesToReset) {
 		if(PlacesToSet != null) {
@@ -288,7 +204,8 @@ public
 	}
 	
 	void resetUnfiredActivities() {
-		UA = new ArrayList<UnfiredActivity>();
+		for(int i=0;i<Transitions.size();i++)
+			UA.put(Transitions.get(i).getName(), 0);
 	}
 	
 	
@@ -330,11 +247,19 @@ public
 		Marking = marking;
 	}
 
-	public String getLastTransition() {
-		return LastTransition;
+	public HashMap<String, Integer> getDefaultMarking() {
+		return DefaultMarking;
 	}
 
-	public void setLastTransition(String lastTransition) {
-		LastTransition = lastTransition;
+	public void setDefaultMarking(HashMap<String, Integer> defaultMarking) {
+		DefaultMarking = defaultMarking;
+	}
+
+	public String getTerminatingEvent() {
+		return TerminatingEvent;
+	}
+
+	public void setTerminatingEvent(String terminatingEvent) {
+		TerminatingEvent = terminatingEvent;
 	};
 }
